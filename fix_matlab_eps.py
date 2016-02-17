@@ -34,6 +34,10 @@ def main():
 
     f = open(tmp)
     for i in f.readlines():
+        # Ignore ends of patches because we find them manually
+        if colored_patch and re.match('.* m f', i):
+            continue
+
         # Hold the patches to group them together
         if colored_patch and re.match('.* f', i):
             line.append(i.replace('f', 'h'))
