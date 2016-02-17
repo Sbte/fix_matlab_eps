@@ -90,10 +90,17 @@ def main():
                             if k.endswith('h\n'):
                                 text += k
                     text += j
+                first_colorbar = []
             else:
                 first_colorbar = list(line_list)
             line_list = []
             continue
+
+        # There was only one colorbar
+        if not colorbar and first_colorbar:
+            for j in first_colorbar:
+                text += j
+            first_colorbar = []
 
         # Add other stuff
         if colored_patch:
