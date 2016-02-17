@@ -49,7 +49,7 @@ def main():
         if colored_patch and (re.match('.*g$', i) or re.match('^Q Q$', i)):
             colored_patch = False
             last = []
-            for j in line_list:
+            for j in reversed(line_list):
                 for k in j:
                     text += k
                 last = j
