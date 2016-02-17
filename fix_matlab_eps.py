@@ -20,8 +20,8 @@ def main():
         return
 
     tmp = os.path.join(tempfile.gettempdir(), 'fix_matlab_eps.eps')
-    ret = subprocess.call('inkscape --export-eps='+tmp+' '+sys.argv[1],
-                          shell=True)
+    ret = subprocess.call('inkscape --export-eps=' +
+                          tmp+' '+sys.argv[1], shell=True)
 
     text = ''
     line_list = []
@@ -42,22 +42,22 @@ def main():
             continue
 
         # End of patches with 1 color
-        if re.match('.*g$', i) and colored_patch:
+        if colored_patch and (re.match('.*g$', i) or re.match('^Q Q$', i)):
             colored_patch = False
             last = []
-            for j in reversed(line_list):
+            for j in line_list:
                 for k in j:
                     text += k
                 last = j
             up_to_m = last[0].split('m')[0]
             text += up_to_m + 'm f\n'
             line_list = []
-
-        # What we thought could be a colorbar wasn't
-        if colorbar and (re.match('.* g$', i) or re.match('.*EOF$', i)):
+        elif re.match('.* g$', i) or i.endswith('showpage\n'):
             colorbar = False
+            colored_patch = False
             for j in line_list:
-                text += j
+                for k in j:
+                    text += k
             line_list = []
 
         # Patches belonging to 1 color
