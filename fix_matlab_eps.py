@@ -1,0 +1,110 @@
+''' Fix EPS images that contain artifacts since Matlab 2014b
+
+Usage: python fix_matlab_eps.py input-file output-file'''
+
+import re
+import os
+import sys
+import subprocess
+import tempfile
+
+
+def main():
+    ret = subprocess.call('inkscape --version', shell=True)
+
+    if len(sys.argv) < 3:
+        print 'Usage: python fix_matlab_eps.py input-file output-file'
+
+    if ret:
+        print 'Error: You need Inkscape to convert images to a parsable format'
+        return
+
+    tmp = os.path.join(tempfile.gettempdir(), 'fix_matlab_eps.eps')
+    ret = subprocess.call('inkscape --export-eps='+tmp+' '+sys.argv[1],
+                          shell=True)
+
+    text = ''
+    line_list = []
+    line = []
+
+    colored_patch = False
+
+    colorbar = False
+    first_colorbar = []
+
+    f = open(tmp)
+    for i in f.readlines():
+        # Hold the patches to group them together
+        if colored_patch and re.match('.* f', i):
+            line.append(i.replace('f', 'h'))
+            line_list.append(line)
+            line = []
+            continue
+
+        # End of patches with 1 color
+        if re.match('.*g$', i) and colored_patch:
+            colored_patch = False
+            last = []
+            for j in reversed(line_list):
+                for k in j:
+                    text += k
+                last = j
+            up_to_m = last[0].split('m')[0]
+            text += up_to_m + 'm f\n'
+            line_list = []
+
+        # What we thought could be a colorbar wasn't
+        if colorbar and (re.match('.* g$', i) or re.match('.*EOF$', i)):
+            colorbar = False
+            for j in line_list:
+                text += j
+            line_list = []
+
+        # Patches belonging to 1 color
+        if re.match('.*rg$', i):
+            colored_patch = True
+            text += i
+            continue
+
+        # Start of the colorbar
+        if re.match('^Q q$', i):
+            colorbar = True
+            line_list.append(i)
+            continue
+
+        # Just append any lines of the colorbar
+        if colorbar:
+            line_list.append(i)
+
+        # End of the colorbar
+        if line_list[-3:] == ['Q\n', '  Q\n', 'Q\n']:
+            colorbar = False
+            if first_colorbar:
+                for j in line_list:
+                    if j.endswith('h\n'):
+                        for k in first_colorbar:
+                            if k.endswith('h\n'):
+                                text += k
+                    text += j
+            else:
+                first_colorbar = list(line_list)
+            line_list = []
+            continue
+
+        # Add other stuff
+        if colored_patch:
+            line.append(i)
+            if i.endswith('h\n') or i.endswith('f\n'):
+                line_list.append(line)
+                line = []
+        elif not colorbar:
+            text += i
+
+    f.close()
+
+    f = open(sys.argv[2], 'w')
+    f.write(text)
+    f.close()
+
+if __name__ == '__main__':
+    main()
