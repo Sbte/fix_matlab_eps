@@ -20,7 +20,7 @@ def main():
         return
 
     tmp = os.path.join(tempfile.gettempdir(), 'fix_matlab_eps.eps')
-    ret = subprocess.call('inkscape --export-eps=' +
+    ret = subprocess.call('inkscape --export-area-page --export-eps=' +
                           tmp+' '+sys.argv[1], shell=True)
 
     text = ''
