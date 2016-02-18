@@ -5,7 +5,7 @@ These artifacts are white lines that have been present since Matlab 2014b
 
 ## Example
 
-Here is an example of what the EPS looks like before and after my script. The script was created by
+Here is an example of what the EPS looks like before and after my script. The EPS was created by
 
 ```Matlab
 z = peaks;
