@@ -3,6 +3,18 @@ A Python script to fix artifacts in EPS files generated from Matlab contour plot
 
 These artifacts are white lines that have been present since Matlab 2014b
 
+## Example
+
+Here is an example of what the EPS looks like before and after my script. The script was created by
+
+```Matlab
+z = peaks;
+contourf(z);
+print(gcf,'-depsc','-painters','out.eps');
+```
+
+![Before and After](http://i.imgur.com/8pp5JYt.png)
+
 # Disclaimer
 
 I do not know anything about EPS files. I just looked at the difference between EPS files from
