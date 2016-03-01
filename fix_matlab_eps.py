@@ -46,7 +46,8 @@ def main():
             continue
 
         # End of patches with 1 color
-        if colored_patch and (re.match('.*g$', i) or re.match('^Q Q$', i)):
+        if colored_patch and (re.match('.*g$', i) or re.match('^Q Q$', i)) \
+           and line_list:
             colored_patch = False
             last = []
             for j in reversed(line_list):
@@ -59,6 +60,11 @@ def main():
         elif re.match('.* g$', i) or i.endswith('showpage\n'):
             colorbar = False
             colored_patch = False
+
+            if line:
+                line_list.append(line)
+                line = []
+
             for j in line_list:
                 for k in j:
                     text += k
