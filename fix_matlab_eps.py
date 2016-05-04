@@ -91,9 +91,9 @@ def main():
             colorbar = False
             if first_colorbar:
                 for j in line_list:
-                    if j.endswith('h\n'):
+                    if j.endswith(' h\n'):
                         for k in first_colorbar:
-                            if k.endswith('h\n'):
+                            if k.endswith(' h\n'):
                                 text += k
                     text += j
                 first_colorbar = []
