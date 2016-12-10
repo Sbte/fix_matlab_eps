@@ -13,10 +13,10 @@ def main():
     ret = subprocess.call('inkscape --version', shell=True)
 
     if len(sys.argv) < 3:
-        print 'Usage: python fix_matlab_eps.py input-file output-file'
+        print('Usage: python fix_matlab_eps.py input-file output-file')
 
     if ret:
-        print 'Error: You need Inkscape to convert images to a parsable format'
+        print('Error: You need Inkscape to convert images to a parsable format')
         return
 
     tmp = os.path.join(tempfile.gettempdir(), 'fix_matlab_eps.eps')
