@@ -46,7 +46,7 @@ def main():
             continue
 
         # End of patches with 1 color
-        if colored_patch and (re.match('.*g$', i) or re.match('^Q Q$', i)) \
+        if colored_patch and (re.match('.* r?g$', i) or re.match('^Q Q$', i)) \
            and line_list:
             colored_patch = False
             last = []
@@ -57,7 +57,7 @@ def main():
             up_to_m = last[0].split('m')[0]
             text += up_to_m + 'm f\n'
             line_list = []
-        elif re.match('.* g$', i) or i.endswith('showpage\n'):
+        elif re.match('.* r?g$', i) or i.endswith('showpage\n'):
             colorbar = False
             colored_patch = False
 
@@ -71,7 +71,7 @@ def main():
             line_list = []
 
         # Patches belonging to 1 color
-        if re.match('.*rg$', i):
+        if re.match('.* rg$', i):
             colored_patch = True
             text += i
             continue
@@ -111,7 +111,7 @@ def main():
         # Add other stuff
         if colored_patch:
             line.append(i)
-            if i.endswith('h\n') or i.endswith('f\n'):
+            if i.endswith(' h\n') or i.endswith(' f\n'):
                 line_list.append(line)
                 line = []
         elif not colorbar:
