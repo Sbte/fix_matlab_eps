@@ -51,11 +51,12 @@ def main():
             colored_patch = False
             last = []
             for j in reversed(line_list):
-                for k in j:
+                for k in last:
                     text += k
                 last = j
-            up_to_m = last[0].split('m')[0]
-            text += up_to_m + 'm f\n'
+            for k in last[:-1]:
+                text += k
+            text += last[-1].replace('h\n', 'f\n')
             line_list = []
         elif re.match('.* r?g$', i) or i.endswith('showpage\n'):
             colorbar = False
