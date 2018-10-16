@@ -58,7 +58,8 @@ def main():
                 text += k
             text += last[-1].replace('h\n', 'f\n')
             line_list = []
-        elif re.match('.* r?g$', i) or i.endswith('showpage\n'):
+        elif re.match('.* r?g$', i) or i.endswith('showpage\n') or \
+             (not colorbar and re.match('^Q q$', i)):
             colorbar = False
             colored_patch = False
 
